@@ -72,8 +72,13 @@ const updateUser = async (req, res, next) => {
     } = req.body;
     let userInfo = {};
 
-    if (!userId ) return handleError(res, next, INV_REQ);
-    if (avatar || validator.isBase64(avatar)) userInfo.avatar = avatar;
+    if (!userId) return handleError(res, next, INV_REQ);
+    if (avatar) {
+      if (!validator.isBase64(avatar.replace(/data:.*;base64,/, ''))) {
+        return handleError(res, next, INV_REQ)
+      }
+      userInfo.avatar = avatar;
+    }
 
     const dbUser = await findUserById(userId);
     if (!dbUser) return handleError(res, next, 'User Id does not exist.');
