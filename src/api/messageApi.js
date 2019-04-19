@@ -30,5 +30,21 @@ export function postMessage(user_id, text) {
   });
 }
 
-
+export function addStarToMessage(messageId) {
+  return new Promise(async(resolve, reject) => {
+      try {
+        const response = await fetch(`/api/messages/${messageId}`, {
+          headers: {
+            Accept: 'application/json text/plain, */*',
+            'Content-Type': 'application/json',
+          },
+          method: 'POST'
+        });
+        resolve(response.json())
+      } catch(e){
+        console.error(e);
+        reject(e);
+      }
+  });
+}
 

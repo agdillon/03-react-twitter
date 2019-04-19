@@ -5,7 +5,8 @@ const path = require('path');
 const {
   getAllMessages,
   getMessagesByUser,
-  createMessage
+  createMessage,
+  addStarToMessage
 } = require('./controllers/messages');
 const {
   loginUser,
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname, '../build')));
 app.get('/api/messages', getAllMessages);
 app.get('/api/messages/user/:userId', getMessagesByUser);
 app.post('/api/messages', createMessage);
+app.post('/api/messages/:messageId', addStarToMessage);
 
 app.post('/api/users/login', loginUser);
 app.post('/api/users/update', updateUser);

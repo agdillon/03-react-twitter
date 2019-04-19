@@ -33,6 +33,16 @@ class Navigation extends Component{
     }
   }
 
+  profileButton() {
+    if (this.props.user.id !== undefined) {
+      return (
+        <Link to='/profile'>
+          <FlatButton label='Profile' secondary={this.props.location.pathname === '/profile'} />
+        </Link>
+      );
+    }
+  }
+
   logoutButton(){
     if(this.props.user.id !== undefined){
       return(
@@ -67,6 +77,7 @@ class Navigation extends Component{
             <FlatButton label="Dashboard" secondary={this.props.location.pathname === "/"}/>
           </Link>
           { this.accountButton() }
+          { this.profileButton() }
           { this.loginButton() }
           { this.registerButton() }
           { this.logoutButton() }

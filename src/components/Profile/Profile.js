@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import ProfileAvatar from "./ProfileAvatar";
 import AvatarDialog from "./AvatarDialog";
 import { getMessages } from "../../api/messageApi";
-
 import "./Profile.css";
 import { addUsersStars } from "../../Utilities/userUtilities";
 import { connect } from "react-redux";
@@ -60,6 +59,18 @@ export class Profile extends Component {
     console.log("Changing avatar");
     this.setState({ avatar: url });
   };
+
+  handleUpStarClick = (e) => {
+    e.preventDefault();
+    console.log(e.target.attributes.messageid.value);
+    let messageid = e.target.attributes.messageid.value;
+
+    addStarToMessage(messageid).then((res) => {
+      console.log(res);
+      this.initializeUserDashboard();
+    });
+
+  }
 
   render() {
     // this.initializeUserDashboard();
