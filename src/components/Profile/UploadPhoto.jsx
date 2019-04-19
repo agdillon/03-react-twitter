@@ -1,9 +1,8 @@
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class UploadPhoto extends Component {
-  handleLoadPhoto = async (event) => {
+  handleLoadPhoto = (event) => {
     event.preventDefault();
     const reader = new FileReader();
     let file = event.target.files[0];
@@ -12,17 +11,9 @@ class UploadPhoto extends Component {
       reader.readAsDataURL(file);
       reader.onloadend = () => {
         this.props.onImageLoaded(reader.result);
-        fetch('api/users/update', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ userId: 1, avatar: reader.result })
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log('Avatar update successful');
-        })
       }
-    } else {
+    }
+    else {
       alert('File uploaded is not valid.');
     }
   }

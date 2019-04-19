@@ -12,15 +12,15 @@ export class Profile extends Component {
     super();
     this.state = {
       avatar: 'https://via.placeholder.com/150x150',
-      name: 'Paul',
-      handle: '@jack',
+      // name: 'Paul',
+      // handle: '@jack',
       message_count: 0,
       star_count: 0,
-      bio: 'Front end dev located in Denver',
-      location: 'Denver, CO',
-      link: 'github.com/git',
-      birth_date: '03/02/1999',
-      dialog_open: false
+      // bio: 'Front end dev located in Denver',
+      // location: 'Denver, CO',
+      // link: 'github.com/git',
+      // birth_date: '03/02/1999',
+      // dialog_open: false
     };
   }
 
@@ -34,7 +34,8 @@ export class Profile extends Component {
         this.setState({
           star_count: addUsersStars(res.data),
           message_count: res.data.length,
-          messages: this.renderMessageItem(res.data)
+          messages: this.renderMessageItem(res.data),
+          avatar: this.props.user.avatar
         });
       }
     });
@@ -94,7 +95,7 @@ export class Profile extends Component {
           </ul>
 
         </div>
-        <AvatarDialog changeAvatar={this.changeAvatar} />
+        <AvatarDialog changeAvatar={this.changeAvatar} userId={this.props.user.id} />
         <div className="messageView">
           <h2>
             {this.props.user.name}

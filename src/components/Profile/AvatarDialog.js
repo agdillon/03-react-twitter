@@ -21,12 +21,23 @@ export default class AvatarDialog extends React.Component {
     this.setState({ open: false });
   };
 
-  handleUpdate = () => {
-    this.handleAvatarUIChange(this.state.avatarUrl);
-    this.setState({ open: false });
+  onImageLoaded = (image) => {
+    this.setState({ avatarUrl: image })
   }
-  handleAvatarUIChange = (image) => {
-    this.props.changeAvatar(image);
+
+  handleUpdate = () => {
+    this.props.changeAvatar(this.state.avatarUrl);
+    this.setState({ open: false });
+
+    fetch('api/users/update', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ userId: this.props.userId, avatar: this.state.avatarUrl })
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log('Avatar update successful');
+    })
   }
 
   render() {
@@ -44,9 +55,7 @@ export default class AvatarDialog extends React.Component {
               To update your avatar, upload a .jpg or .png.
             </DialogContentText>
              <UploadPhoto
-                onImageLoaded={ (imageFile) => {
-                  this.setState({ avatarUrl: imageFile });
-                }}
+              onImageLoaded={this.onImageLoaded}
               />
           </DialogContent>
           <DialogActions>
