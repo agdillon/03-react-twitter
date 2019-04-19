@@ -6,8 +6,10 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import UploadPhoto from './UploadPhoto';
+import { setUser } from '../../actions/loginActions';
+import { connect } from 'react-redux';
 
-export default class AvatarDialog extends React.Component {
+export class AvatarDialog extends React.Component {
   state = {
     open: false,
     avatarUrl: ''
@@ -36,7 +38,8 @@ export default class AvatarDialog extends React.Component {
     })
     .then(res => res.json())
     .then(data => {
-        console.log('Avatar update successful');
+      this.props.setUserInfo(data.data[0])
+      console.log('Avatar update successful');
     })
   }
 
@@ -71,3 +74,7 @@ export default class AvatarDialog extends React.Component {
     );
   }
 }
+
+export const mapDispatchToProps = dispatch => ({ setUserInfo: user => dispatch(setUser(user)) })
+
+export default connect(null, mapDispatchToProps)(AvatarDialog)
