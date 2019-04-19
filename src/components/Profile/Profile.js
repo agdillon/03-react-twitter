@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
-import ProfileAvatar from './ProfileAvatar';
-import AvatarDialog from './AvatarDialog';
-import { getMessages } from '../../api/messageApi';
-
-import './Profile.css';
-import { addUsersStars } from '../../Utilities/userUtilities';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import ProfileAvatar from "./ProfileAvatar";
+import AvatarDialog from "./AvatarDialog";
+import { getMessages } from "../../api/messageApi";
+import "./Profile.css";
+import { addUsersStars } from "../../Utilities/userUtilities";
+import { connect } from "react-redux";
 
 export class Profile extends Component {
   constructor() {
@@ -29,7 +28,7 @@ export class Profile extends Component {
   }
 
   initializeUserDashboard = () => {
-    getMessages().then((res) => {
+    getMessages().then(res => {
       if (res && res.data) {
         this.setState({
           star_count: addUsersStars(res.data),
@@ -39,22 +38,39 @@ export class Profile extends Component {
         });
       }
     });
-  }
+  };
 
-  renderMessageItem = messagesList => messagesList.map((message, index) => (
-    <li key={index}>
-      {`${message.created_at.replace(/T/, ' ').replace(/\..*/, '')} ${message.handle} ${message.text}`}
-    </li>
-  ));
+  renderMessageItem = messagesList => {
+    return messagesList
+      .filter(message => {
+        return message.user_id === this.props.userId;
+      })
+      .reduce((accu, message, index) => {
+        accu.push(<li key={index}>--- {message.text}</li>);
+        return accu;
+      }, []);
+  };
 
-  avatarClicked = (e) => {
+  avatarClicked = e => {
     e.preventDefault();
-    console.log('The link was clicked.');
-  }
+    console.log("The link was clicked.");
+  };
 
-  changeAvatar = (url) => {
-    console.log('Changing avatar');
+  changeAvatar = url => {
+    console.log("Changing avatar");
     this.setState({ avatar: url });
+  };
+
+  handleUpStarClick = (e) => {
+    e.preventDefault();
+    console.log(e.target.attributes.messageid.value);
+    let messageid = e.target.attributes.messageid.value;
+
+    addStarToMessage(messageid).then((res) => {
+      console.log(res);
+      this.initializeUserDashboard();
+    });
+
   }
 
   render() {
@@ -62,38 +78,26 @@ export class Profile extends Component {
     return (
       <div className="ProfileContainer">
         <div className="ProfileHeader">
-          <ProfileAvatar onClick={this.avatarClicked} image={this.state.avatar} />
-          <h1
-            data-handle={`@${this.props.user.handle}`}
-            className="handle"
-          >
+          <ProfileAvatar
+            onClick={this.avatarClicked}
+            image={this.state.avatar}
+          />
+          <h1 data-handle={`@${this.props.user.handle}`} className="handle">
             {this.props.user.name}
-
           </h1>
           <ul className="InfoList">
-            <li>
-              messages:
-              {' '}
-              {this.state.message_count}
-            </li>
-            <li>
-              likes:
-              {' '}
-              {this.state.star_count}
-            </li>
+            <li>messages: {this.state.message_count}</li>
+            <li>likes: {this.state.star_count}</li>
           </ul>
         </div>
         <div className="InfoContainer">
-          <p>
-            {this.props.user.bio}
-          </p>
+          <p>{this.props.user.bio}</p>
 
           <ul className="InfoList">
             <li>{this.props.user.location}</li>
             <li>{this.props.user.link}</li>
             <li>{this.props.user.birth_date}</li>
           </ul>
-
         </div>
         <AvatarDialog changeAvatar={this.changeAvatar} userId={this.props.user.id} />
         <div className="messageView">
@@ -104,8 +108,7 @@ export class Profile extends Component {
           <ul>
             {this.props.userId
               ? this.state.messages
-              : 'please log in to view messages'
-            }
+              : "please log in to view messages"}
           </ul>
         </div>
       </div>
